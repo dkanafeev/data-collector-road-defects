@@ -15,7 +15,8 @@ window.acc = window.acc || {} ;         // don't clobber existing acc object
 // The console.log() messages sprinkled in this file are for instruction and debug.
 // If you reuse this code you do not need to include them as part of your own app.
 // Set to "true" if you want the console.log messages to appear.
-
+var mWriter;
+document.addEventListener("deviceready", onDeviceReady, false);
 acc.LOG = true ;
 acc.consoleLog = function() {           // only emits console.log messages if acc.LOG != false
     "use strict" ;
@@ -31,6 +32,62 @@ acc.consoleLog = function() {           // only emits console.log messages if ac
 // see: http://www.html5rocks.com/en/tutorials/device/orientation/
 
 acc.watchIdAccel = null ;               // holds the accelerometer "watch ID" handle
+
+//var mWriter;
+
+//document.addEventListener("deviceready", onDeviceReady, false);
+
+// Cordova is ready
+//
+function onDeviceReady() {
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+}
+
+function gotFS(fileSystem) {
+    acc.consoleLog("path to file", fileSystem.root.fullPath);
+    //fileSystem.root.getDirectory("storage", {create: true, exclusive: false}, gotFileDir, fail);
+    //fileSystem.root.getFile("accel.txt", {create: true, exclusive: false}, gotFileEntry, fail);
+    fileSystem.root.getDirectory("storage", {create: true, exclusive: false}, 
+                                 function(fileDir) {
+                                        console.log(fileDir.fullPath);
+                                        fileDir.getDirectory("emulated", {create: true, exclusive: false}, 
+                                            function(fileDir) {
+                                                console.log(fileDir.fullPath);                                                                            fileDir.getDirectory("0", {create: true, exclusive: false}, 
+                                                gotFileDir,
+                                                function(error) {
+                                                    console.log("Err: " + error.code);
+                                                });
+                                                },
+                                            function(error) {
+                                                console.log("Err: " + error.code);
+                                            });
+                                    },
+                                function(error) {
+                                        console.log("Err: " + error.code);
+                                    });
+    //fileSystem.root.getFile("accel.txt", {create: true, exclusive: false}, gotFileEntry, fail);
+}
+
+function gotFileDir(fileDir) {
+    acc.consoleLog("path to file", fileDir.fullPath);
+    fileDir.getFile("accel.txt", {create: true, exclusive: false}, gotFileEntry, fail);
+}
+
+function gotFileEntry(fileEntry) {
+    fileEntry.createWriter(gotFileWriter, fail);
+    acc.consoleLog("create writer"); 
+}
+
+
+function gotFileWriter(writer) {
+    this.mWriter = writer;
+    acc.consoleLog("write to file"); 
+}
+
+function fail(error) {
+    acc.consoleLog("can't write to file"); 
+    console.log(error.code);
+}
 
 acc.initAccel = function() {
     "use strict" ;
@@ -62,6 +119,15 @@ acc.btnAccel = function() {
         document.getElementById('acceleration-y').value = acceleration.y.toFixed(6) ;
         document.getElementById('acceleration-z').value = acceleration.z.toFixed(6) ;
         document.getElementById('acceleration-t').value = acceleration.timestamp ;
+        var date = new Date();
+        if(mWriter == null)
+            {
+                acc.consoleLog("where is file????");
+            }
+        mWriter.write("write ");
+        acc.consoleLog("write ");
+        
+        //mWriter.write("acc: " + date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + " " + date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds() + ":" + date.getUTCMilliseconds() + ": "+ acceleration.x.toString(10) + ":" + acceleration.y.toString(10) + ":" + acceleration.z.toString(10) + "\n");
     }
 
     function onFail() {
