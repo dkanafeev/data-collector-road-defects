@@ -107,6 +107,7 @@ app.init.events = function() {
     app.init.debug() ;              // just for debug, not required; keep it if you want it or get rid of it
     app.init.hideSplashScreen() ;   // after init is good time to remove splash screen; using a splash screen is optional
 
+    writeToFile("test.output", { message: 'THIS IS TEST'});
     // app initialization is done
     // app event handlers are ready
     // exit to idle state and just wait for events...
@@ -115,7 +116,70 @@ app.init.events = function() {
 } ;
 document.addEventListener("app.Ready", app.init.events, false) ;
 
+// Get a list of all the entries in the directory
+function ls(directoryEntry){
+    var directoryReader = directoryEntry.createReader();
+    
+    directoryReader.readEntries(function(entries){
+        var i;
+        for (i=0; i<entries.length; i++) {
+            console.log(entries[i].name);
+        }
+    },function(error) {
+        alert("Failed to list directory contents: " + error.code);
+    });
+}
 
+// Write JSON to file
+function writeToFile(fileName, data) {
+    // console.log('init-app.js: writeToFile: ' + fileName);
+    
+    data = JSON.stringify(data, null, '\t');
+    
+    // See README https://github.com/apache/cordova-plugin-file
+    window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function (directoryEntry) {
+        directoryEntry.getFile(fileName, { create: true, exclusive: false }, function (fileEntry) {
+            fileEntry.createWriter(function (fileWriter) {
+                fileWriter.onwriteend = function (e) {
+                    // console.log('init-app.js: writeToFile completed!');
+                };
+                fileWriter.onerror = function (e) {
+                    console.log('init-app.js: writeToFile failed: ' + e.toString());
+                };
+                var blob = new Blob([data], { type: 'text/plain' });
+                fileWriter.seek(fileWriter.length);
+                fileWriter.write(blob);
+            }, errorHandler.bind(null, fileName));
+        }, errorHandler.bind(null, fileName));
+    }, errorHandler.bind(null, fileName));
+}
+
+// errorHandler
+var errorHandler = function (fileName, e) {  
+    var msg = '';
+
+    switch (e.code) {
+        case FileError.QUOTA_EXCEEDED_ERR:
+            msg = 'Storage quota exceeded';
+            break;
+        case FileError.NOT_FOUND_ERR:
+            msg = 'File not found';
+            break;
+        case FileError.SECURITY_ERR:
+            msg = 'Security error';
+            break;
+        case FileError.INVALID_MODIFICATION_ERR:
+            msg = 'Invalid modification';
+            break;
+        case FileError.INVALID_STATE_ERR:
+            msg = 'Invalid state';
+            break;
+        default:
+            msg = 'Unknown error';
+            break;
+    };
+    console.log('Error (' + fileName + '): ' + msg);
+}
 
 // Primarily for debug and demonstration.
 // Update our status in the main view. Are we running in a Cordova container or in a browser?

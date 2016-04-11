@@ -62,6 +62,11 @@ acc.btnAccel = function() {
         document.getElementById('acceleration-y').value = acceleration.y.toFixed(6) ;
         document.getElementById('acceleration-z').value = acceleration.z.toFixed(6) ;
         document.getElementById('acceleration-t').value = acceleration.timestamp ;
+        writeToFile("accelerometer.output", 
+                                { x: acceleration.x.toFixed(6), 
+                                  y: acceleration.y.toFixed(6), 
+                                  z: acceleration.z.toFixed(6) 
+                                });
     }
 
     function onFail() {
@@ -70,8 +75,8 @@ acc.btnAccel = function() {
 
 
     if( acc.watchIdAccel === null ) {
-        try {                               // watch and update accelerometer values every 500 msecs
-            acc.watchIdAccel = navigator.accelerometer.watchAcceleration(onSuccess, onFail, {frequency:500}) ;
+        try {                               // watch and update accelerometer values every 25 msecs
+            acc.watchIdAccel = navigator.accelerometer.watchAcceleration(onSuccess, onFail, {frequency:25}) ;
             addClass("cl_btnOn", document.getElementById("id_btnAccel")) ;
             acc.consoleLog(fName, "btnAccel enabled.") ;
         }
