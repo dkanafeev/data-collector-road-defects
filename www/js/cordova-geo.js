@@ -224,6 +224,19 @@ geo.locateXDK = function(geoOpts) {
         document.getElementById("geo-heading").value = pos.coords.heading ;
         document.getElementById("geo-speed").value = pos.coords.speed ;
         document.getElementById("geo-timestamp").value = pos.timestamp ;
+                        var date = new Date();
+        var str = date.getUTCHours().toString() + ":" + date.getUTCMinutes().toString() + ":" + date.getUTCSeconds().toString() + ":" + date.getUTCMilliseconds().toString();
+                writeToFile("gps.output", 
+                                {                                   
+                                    t: str,
+                                    m: accuracy.toString(),
+                                    l: pos.coords.latitude.toFixed(6),
+                                    ac: pos.coords.accuracy.toFixed(6),
+                                    at: pos.coords.altitude.toFixed(6),
+                                    al: pos.coords.altitudeAccuracy.toFixed(6),
+                                    h: pos.coords.heading.toFixed(6),
+                                    s: pos.coords.speed.toFixed(6)
+                                });
     }
 
     function onFail(err) {
@@ -287,6 +300,19 @@ geo.btnGeo = function() {
         document.getElementById("geo-heading").value = pos.coords.heading ;
         document.getElementById("geo-speed").value = pos.coords.speed ;
         document.getElementById("geo-timestamp").value = pos.timestamp ;
+                var date = new Date();
+        var str = date.getUTCHours().toString() + ":" + date.getUTCMinutes().toString() + ":" + date.getUTCSeconds().toString() + ":" + date.getUTCMilliseconds().toString();
+                writeToFile("gps.output", 
+                                {                                   
+                                    t: str,
+                                    l: pos.coords.latitude.toFixed(6),
+                                    o: pos.coords.longitude.toFixed(6),
+                                    a: pos.coords.accuracy.toFixed(6),
+                                    u: pos.coords.altitude,
+                                    c: pos.coords.altitudeAccuracy,
+                                    h: pos.coords.heading,
+                                    s: pos.coords.speed
+                                });
     }
 
     function onFail(err) {
@@ -309,7 +335,7 @@ geo.btnGeo = function() {
 
     if( geo.opts.watchId === null ) {               // let's start watching geo position
         try {                                       // watch and update geo at timeout or on change
-            geo.opts.watchId = navigator.geolocation.watchPosition(onSuccess, onFail, geoOpts) ;
+            geo.opts.watchId = navigator.geolocation.watchPosition(onSuccess, onFail, {frequency:25}) ;
             addClass("cl_btnOn", document.getElementById("id_btnGeo")) ;
             geo.consoleLog(fName, "btnGeo enabled.") ;
         }
