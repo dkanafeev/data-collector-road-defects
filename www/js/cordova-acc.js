@@ -62,11 +62,10 @@ acc.btnAccel = function() {
         document.getElementById('acceleration-y').value = acceleration.y.toFixed(6) ;
         document.getElementById('acceleration-z').value = acceleration.z.toFixed(6) ;
         document.getElementById('acceleration-t').value = acceleration.timestamp ;
-        var date = new Date();
-        var str = date.getUTCHours().toString() + ":" + date.getUTCMinutes().toString() + ":" + date.getUTCSeconds().toString() + ":" + date.getUTCMilliseconds().toString();
+        var str = getDateToStr();
         writeToFile("accelerometer.output", 
                                 {                                   
-                                    t: str,
+                                    time: str,
                                     x: acceleration.x.toFixed(6), 
                                     y: acceleration.y.toFixed(6), 
                                     z: acceleration.z.toFixed(6) 
@@ -130,12 +129,11 @@ acc.btnCompass = function() {
 
     function onSuccess(heading) {
         document.getElementById('compass-dir').value = heading.magneticHeading.toFixed(6) ;
-        var date = new Date();
-        var str = date.getUTCHours().toString() + ":" + date.getUTCMinutes().toString() + ":" + date.getUTCSeconds().toString() + ":" + date.getUTCMilliseconds().toString();
+        var str = getDateToStr();
                 writeToFile("compas.output", 
                                 {                                   
-                                    t: str,
-                                    x: heading.magneticHeading.toFixed(6)
+                                    time: str,
+                                    magneticHeading: heading.magneticHeading.toFixed(6)
                                 });
         }
     
@@ -146,7 +144,7 @@ acc.btnCompass = function() {
 
 
     if( acc.watchIdCompass === null ) {
-        try {                               // watch and update compass value every 500 msecs
+        try {                               // watch and update compass value every 25 msecs
             acc.watchIdCompass = navigator.compass.watchHeading(onSuccess, onFail, {frequency:25}) ;
             addClass("cl_btnOn", document.getElementById("id_btnCompass")) ;
             acc.consoleLog(fName, "btnCompass enabled.") ;

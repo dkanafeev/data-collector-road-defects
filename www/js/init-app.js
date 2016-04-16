@@ -130,6 +130,14 @@ function ls(directoryEntry){
     });
 }
 
+//Get date
+function getDateToStr()
+{
+    var date = new Date();
+    var str = date.getUTCHours().toString() + ":" + date.getUTCMinutes().toString() + ":" + date.getUTCSeconds().toString() + ":" + date.getUTCMilliseconds().toString();
+    return str;
+}
+
 // Write JSON to file
 function writeToFile(fileName, data) {
     // console.log('init-app.js: writeToFile: ' + fileName);
