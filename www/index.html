@@ -24,6 +24,7 @@
     <!-- <script src="lib/mc/hammer.js"></script> -->
     <!-- <script src="bower_components/fastclick/lib/fastclick.js"></script> -->
     <!-- <script src="lib/jq/jquery.js"></script> -->
+    <script src="js/math.js"></script>
     <script src="bower_components/ua-parser-js/dist/ua-parser.min.js"></script>
     <script src="bower_components/moment/min/moment.min.js"></script>
 
@@ -63,8 +64,10 @@
 
         <br>
 
-        <input id="id_btnAccel"         type="button" value="Accelerometer" />
+        <input id="id_btnAccel"         type="button" value="Accel" />
         <input id="id_btnCompass"       type="button" value="Compass" />
+        <input id="id_btnGyro"          type="button" value="Gyro" />
+        <input id="id_btnFix"           type="button" value="Fix" />
 
         <br>
 
@@ -105,6 +108,18 @@
             <tr>
                 <td><label for="acceleration-t">AccelT:</label></td>
                 <td><input id="acceleration-t" type="text" disabled="disabled" /></td>
+            </tr>
+            <tr>
+                <td><label for="gyro-alpha">GyroA:</label></td>
+                <td><input id="gyro-alpha" type="text" disabled="disabled" /></td>
+            </tr>
+            <tr>
+                <td><label for="gyro-beta">GyroB:</label></td>
+                <td><input id="gyro-beta" type="text" disabled="disabled" /></td>
+            </tr>
+            <tr>
+                <td><label for="gyro-gamma">GyroG:</label></td>
+                <td><input id="gyro-gamma" type="text" disabled="disabled" /></td>
             </tr>
             <tr>
                 <td><label for="compass-dir">Compass:</label></td>

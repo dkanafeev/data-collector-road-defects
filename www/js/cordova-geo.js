@@ -160,24 +160,18 @@ geo.locate = function(geoOpts) {
             document.getElementById("geo-mode").value = accuracy ;
         document.getElementById("geo-latitude").value = pos.coords.latitude ;
         document.getElementById("geo-longitude").value = pos.coords.longitude ;
-        document.getElementById("geo-accuracy").value = pos.coords.accuracy ;
-        document.getElementById("geo-altitude").value = pos.coords.altitude ;
-        document.getElementById("geo-altAcc").value = pos.coords.altitudeAccuracy ;
-        document.getElementById("geo-heading").value = pos.coords.heading ;
-        document.getElementById("geo-speed").value = pos.coords.speed ;
-        document.getElementById("geo-timestamp").value = pos.timestamp ;
-        var str = getDateToStr();
-        writeToFile("gps.output", 
-                        {                                   
-                            time: str,
-                            latitude: pos.coords.latitude.toFixed(6),
-                            longitude: pos.coords.longitude.toFixed(6),
-                            accuracy: pos.coords.accuracy.toFixed(6),
-                            altitude: pos.coords.altitude,
-                            altitudeAccuracy: pos.coords.altitudeAccuracy,
-                            heading: pos.coords.heading,
-                            speed: pos.coords.speed
-                        });
+        
+        //document.getElementById("geo-accuracy").value = pos.coords.accuracy ;
+        //document.getElementById("geo-altitude").value = pos.coords.altitude ;
+        //document.getElementById("geo-altAcc").value = pos.coords.altitudeAccuracy ;
+        //document.getElementById("geo-heading").value = pos.coords.heading ;
+        //document.getElementById("geo-speed").value = pos.coords.speed ;
+        //document.getElementById("geo-timestamp").value = pos.timestamp ;
+        
+        writeToFile("gps.locale.output", getDateToStr() + "," + 
+                                  pos.coords.latitude.toFixed(6) + "," +
+                                  pos.coords.longitude.toFixed(6)
+        );
     }
 
     function onFail(err) {
@@ -189,12 +183,13 @@ geo.locate = function(geoOpts) {
             document.getElementById("geo-mode").value = accuracy ;
         document.getElementById("geo-latitude").value = err.code ;
         document.getElementById("geo-longitude").value = err.message ;
-        document.getElementById("geo-accuracy").value = "" ;
-        document.getElementById("geo-altitude").value = "" ;
-        document.getElementById("geo-altAcc").value = "" ;
-        document.getElementById("geo-heading").value = "" ;
-        document.getElementById("geo-speed").value = "" ;
-        document.getElementById("geo-timestamp").value = "" ;
+        
+        //document.getElementById("geo-accuracy").value = "" ;
+        //document.getElementById("geo-altitude").value = "" ;
+        //document.getElementById("geo-altAcc").value = "" ;
+        //document.getElementById("geo-heading").value = "" ;
+        //document.getElementById("geo-speed").value = "" ;
+        //document.getElementById("geo-timestamp").value = "" ;
         geo.consoleLog(fName, 'geoError(' + err.code + '): ' + err.message) ;
         // 1: PERMISSION_DENIED
         // 2: POSITION_UNAVAILABLE
@@ -230,24 +225,11 @@ geo.locateXDK = function(geoOpts) {
             document.getElementById("geo-mode").value = accuracy ;
         document.getElementById("geo-latitude").value = pos.coords.latitude ;
         document.getElementById("geo-longitude").value = pos.coords.longitude ;
-        document.getElementById("geo-accuracy").value = pos.coords.accuracy ;
-        document.getElementById("geo-altitude").value = pos.coords.altitude ;
-        document.getElementById("geo-altAcc").value = pos.coords.altitudeAccuracy ;
-        document.getElementById("geo-heading").value = pos.coords.heading ;
-        document.getElementById("geo-speed").value = pos.coords.speed ;
-        document.getElementById("geo-timestamp").value = pos.timestamp ;
-        var str = getDateToStr();
-        writeToFile("gps.output", 
-                        {                                   
-                            time: str,
-                            latitude: pos.coords.latitude.toFixed(6),
-                            longitude: pos.coords.longitude.toFixed(6),
-                            accuracy: pos.coords.accuracy.toFixed(6),
-                            altitude: pos.coords.altitude,
-                            altitudeAccuracy: pos.coords.altitudeAccuracy,
-                            heading: pos.coords.heading,
-                            speed: pos.coords.speed
-                        });
+        
+        writeToFile("gps.locale.xdk.output", getDateToStr() + "," + 
+                                  pos.coords.latitude.toFixed(6) + "," +
+                                  pos.coords.longitude.toFixed(6)
+        );
     }
 
     function onFail(err) {
@@ -259,12 +241,6 @@ geo.locateXDK = function(geoOpts) {
             document.getElementById("geo-mode").value = accuracy ;
         document.getElementById("geo-latitude").value = err ;
         document.getElementById("geo-longitude").value = "" ;
-        document.getElementById("geo-accuracy").value = "" ;
-        document.getElementById("geo-altitude").value = "" ;
-        document.getElementById("geo-altAcc").value = "" ;
-        document.getElementById("geo-heading").value = "" ;
-        document.getElementById("geo-speed").value = "" ;
-        document.getElementById("geo-timestamp").value = "" ;
         geo.consoleLog(fName, "geoError(" + err + ")") ;
     }
 
@@ -305,24 +281,11 @@ geo.btnGeo = function() {
             document.getElementById("geo-mode").value = accuracy ;
         document.getElementById("geo-latitude").value = pos.coords.latitude ;
         document.getElementById("geo-longitude").value = pos.coords.longitude ;
-        document.getElementById("geo-accuracy").value = pos.coords.accuracy ;
-        document.getElementById("geo-altitude").value = pos.coords.altitude ;
-        document.getElementById("geo-altAcc").value = pos.coords.altitudeAccuracy ;
-        document.getElementById("geo-heading").value = pos.coords.heading ;
-        document.getElementById("geo-speed").value = pos.coords.speed ;
-        document.getElementById("geo-timestamp").value = pos.timestamp ;
-        var str = getDateToStr();
-        writeToFile("gps.output", 
-                        {                                   
-                            time: str,
-                            latitude: pos.coords.latitude.toFixed(6),
-                            longitude: pos.coords.longitude.toFixed(6),
-                            accuracy: pos.coords.accuracy.toFixed(6),
-                            altitude: pos.coords.altitude,
-                            altitudeAccuracy: pos.coords.altitudeAccuracy,
-                            heading: pos.coords.heading,
-                            speed: pos.coords.speed
-                        });
+        
+        writeToFile("gps.geo.output", getDateToStr() + "," + 
+                                  pos.coords.latitude.toFixed(6) + "," +
+                                  pos.coords.longitude.toFixed(6)
+        );
     }
 
     function onFail(err) {
@@ -334,12 +297,7 @@ geo.btnGeo = function() {
             document.getElementById("geo-mode").value = accuracy ;
         document.getElementById("geo-latitude").value = err.code ;
         document.getElementById("geo-longitude").value = err.message ;
-        document.getElementById("geo-accuracy").value = "" ;
-        document.getElementById("geo-altitude").value = "" ;
-        document.getElementById("geo-altAcc").value = "" ;
-        document.getElementById("geo-heading").value = "" ;
-        document.getElementById("geo-speed").value = "" ;
-        document.getElementById("geo-timestamp").value = "" ;
+
         geo.consoleLog(fName, "geoError(" + err.code + "): " + err.message) ;
     }
 
@@ -389,26 +347,14 @@ geo.btnGeoXDK = function() {
             document.getElementById("geo-mode").value = accuracy + " " + moment().format("HH:mm:ss.SSS") ;
         else
             document.getElementById("geo-mode").value = accuracy ;
+        
         document.getElementById("geo-latitude").value = pos.coords.latitude ;
         document.getElementById("geo-longitude").value = pos.coords.longitude ;
-        document.getElementById("geo-accuracy").value = pos.coords.accuracy ;
-        document.getElementById("geo-altitude").value = pos.coords.altitude ;
-        document.getElementById("geo-altAcc").value = pos.coords.altitudeAccuracy ;
-        document.getElementById("geo-heading").value = pos.coords.heading ;
-        document.getElementById("geo-speed").value = pos.coords.speed ;
-        document.getElementById("geo-timestamp").value = pos.timestamp ;
-        var str = getDateToStr();
-        writeToFile("gps.output", 
-                        {                                   
-                            time: str,
-                            latitude: pos.coords.latitude.toFixed(6),
-                            longitude: pos.coords.longitude.toFixed(6),
-                            accuracy: pos.coords.accuracy.toFixed(6),
-                            altitude: pos.coords.altitude,
-                            altitudeAccuracy: pos.coords.altitudeAccuracy,
-                            heading: pos.coords.heading,
-                            speed: pos.coords.speed
-                        });
+
+        writeToFile("gps.geo.xdk.output", getDateToStr() + "," + 
+                                  pos.coords.latitude.toFixed(6) + "," +
+                                  pos.coords.longitude.toFixed(6)
+        );
     }
 
     function onFail(err) {
@@ -420,12 +366,7 @@ geo.btnGeoXDK = function() {
             document.getElementById("geo-mode").value = accuracy ;
         document.getElementById("geo-latitude").value = err ;
         document.getElementById("geo-longitude").value = "" ;
-        document.getElementById("geo-accuracy").value = "" ;
-        document.getElementById("geo-altitude").value = "" ;
-        document.getElementById("geo-altAcc").value = "" ;
-        document.getElementById("geo-heading").value = "" ;
-        document.getElementById("geo-speed").value = "" ;
-        document.getElementById("geo-timestamp").value = "" ;
+
         geo.consoleLog(fName, "geoError(" + err + ")") ;
     }
 

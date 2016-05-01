@@ -75,6 +75,10 @@ app.init.events = function() {
     el.addEventListener(evt, app.btnBeep, false) ;
     el = document.getElementById("id_btnVibrate") ;
     el.addEventListener(evt, app.btnVibrate, false) ;
+    el = document.getElementById("id_btnFix") ;
+    el.addEventListener(evt, app.btnFix, false) ;
+    el = document.getElementById("id_btnGyro") ;
+    el.addEventListener(evt, app.btnGyro, false) ;
     el = document.getElementById("id_btnBarkCordova") ;
     el.addEventListener(evt, app.btnBarkCordova, false) ;
     el = document.getElementById("id_btnBarkXDK") ;
@@ -107,7 +111,15 @@ app.init.events = function() {
     app.init.debug() ;              // just for debug, not required; keep it if you want it or get rid of it
     app.init.hideSplashScreen() ;   // after init is good time to remove splash screen; using a splash screen is optional
 
-    writeToFile("test.output", { message: 'THIS IS TEST'});
+    // set header for files
+    writeToFile("accelerometer.output",     "time,accx,accy,accz");
+    writeToFile("gyroscope.output",         "time,alpha,beta,gamma");
+    writeToFile("compass.output",           "time,magneticHeading");
+    writeToFile("gps.locale.output",        "time,latitude,longitude");
+    writeToFile("gps.locale.xdk.output",    "time,latitude,longitude");
+    writeToFile("gps.geo.output",           "time,latitude,longitude");
+    writeToFile("gps.geo.xdk.output",       "time,latitude,longitude");
+    
     // app initialization is done
     // app event handlers are ready
     // exit to idle state and just wait for events...
@@ -138,11 +150,9 @@ function getDateToStr()
     return str;
 }
 
-// Write JSON to file
+// Write data to file
 function writeToFile(fileName, data) {
     // console.log('init-app.js: writeToFile: ' + fileName);
-    
-    data = JSON.stringify(data, null, '\t');
     
     // See README https://github.com/apache/cordova-plugin-file
     window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function (directoryEntry) {
@@ -154,9 +164,9 @@ function writeToFile(fileName, data) {
                 fileWriter.onerror = function (e) {
                     console.log('init-app.js: writeToFile failed: ' + e.toString());
                 };
-                var blob = new Blob([data], { type: 'text/plain' });
+                
                 fileWriter.seek(fileWriter.length);
-                fileWriter.write(blob);
+                fileWriter.write(data + "\n");
             }, errorHandler.bind(null, fileName));
         }, errorHandler.bind(null, fileName));
     }, errorHandler.bind(null, fileName));

@@ -58,18 +58,21 @@ acc.btnAccel = function() {
     acc.consoleLog(fName, "entry") ;
 
     function onSuccess(acceleration) {
-        document.getElementById('acceleration-x').value = acceleration.x.toFixed(6) ;
-        document.getElementById('acceleration-y').value = acceleration.y.toFixed(6) ;
-        document.getElementById('acceleration-z').value = acceleration.z.toFixed(6) ;
-        document.getElementById('acceleration-t').value = acceleration.timestamp ;
-        var str = getDateToStr();
-        writeToFile("accelerometer.output", 
-                                {                                   
-                                    time: str,
-                                    x: acceleration.x.toFixed(6), 
-                                    y: acceleration.y.toFixed(6), 
-                                    z: acceleration.z.toFixed(6) 
-                                });
+        
+        var accelMatrix    = math.matrix([ acceleration.x, 
+                                           acceleration.y, 
+                                           acceleration.z ]);            
+
+        var newAccelMatrix =  math.round(math.multiply(app.rotateMatrix, accelMatrix), 2);   
+        
+        document.getElementById('acceleration-x').value = math.subset(newAccelMatrix, math.index(0));
+        document.getElementById('acceleration-y').value = math.subset(newAccelMatrix, math.index(1));
+        document.getElementById('acceleration-z').value = math.subset(newAccelMatrix, math.index(2));
+        
+        writeToFile("accelerometer.output", getDateToStr() + "," +
+                                            math.subset(newAccelMatrix, math.index(0)) + "," +
+                                            math.subset(newAccelMatrix, math.index(1)) + "," +
+                                            math.subset(newAccelMatrix, math.index(2)));
     }
 
     function onFail() {
@@ -129,13 +132,8 @@ acc.btnCompass = function() {
 
     function onSuccess(heading) {
         document.getElementById('compass-dir').value = heading.magneticHeading.toFixed(6) ;
-        var str = getDateToStr();
-                writeToFile("compas.output", 
-                                {                                   
-                                    time: str,
-                                    magneticHeading: heading.magneticHeading.toFixed(6)
-                                });
-        }
+        writeToFile("compas.output", getDateToStr() + "," + heading.magneticHeading.toFixed(6))
+    }
     
 
     function onFail(compassError) {
