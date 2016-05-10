@@ -158,6 +158,7 @@ geo.locate = function(geoOpts) {
             document.getElementById("geo-mode").value = accuracy + " " + moment().format("HH:mm:ss.SSS") ;
         else
             document.getElementById("geo-mode").value = accuracy ;
+
         document.getElementById("geo-latitude").value = pos.coords.latitude ;
         document.getElementById("geo-longitude").value = pos.coords.longitude ;
         
@@ -168,7 +169,7 @@ geo.locate = function(geoOpts) {
         //document.getElementById("geo-speed").value = pos.coords.speed ;
         //document.getElementById("geo-timestamp").value = pos.timestamp ;
         
-        writeToFile("gps.locale.output", getDateToStr() + "," + 
+        write("gps.locale.output", getDateToStr() + "," + 
                                   pos.coords.latitude.toFixed(6) + "," +
                                   pos.coords.longitude.toFixed(6)
         );
@@ -226,7 +227,7 @@ geo.locateXDK = function(geoOpts) {
         document.getElementById("geo-latitude").value = pos.coords.latitude ;
         document.getElementById("geo-longitude").value = pos.coords.longitude ;
         
-        writeToFile("gps.locale.xdk.output", getDateToStr() + "," + 
+        write("gps.locale.xdk.output", getDateToStr() + "," + 
                                   pos.coords.latitude.toFixed(6) + "," +
                                   pos.coords.longitude.toFixed(6)
         );
@@ -275,14 +276,10 @@ geo.btnGeo = function() {
     function onSuccess(pos) {
         geo.consoleLog(fName, "onSuccess") ;
         document.getElementById("geo-info").value = fName + " onSuccess " ;
-        if( window.moment )
-            document.getElementById("geo-mode").value = accuracy + " " + moment().format("HH:mm:ss.SSS") ;
-        else
-            document.getElementById("geo-mode").value = accuracy ;
         document.getElementById("geo-latitude").value = pos.coords.latitude ;
         document.getElementById("geo-longitude").value = pos.coords.longitude ;
         
-        writeToFile("gps.geo.output", getDateToStr() + "," + 
+        write("gps.geo.output", getDateToStr() + "," + 
                                   pos.coords.latitude.toFixed(6) + "," +
                                   pos.coords.longitude.toFixed(6)
         );
@@ -291,10 +288,6 @@ geo.btnGeo = function() {
     function onFail(err) {
         geo.consoleLog(fName, "onFail") ;
         document.getElementById("geo-info").value = fName + " onFail " ;
-        if( window.moment )
-            document.getElementById("geo-mode").value = accuracy + " " + moment().format("HH:mm:ss.SSS") ;
-        else
-            document.getElementById("geo-mode").value = accuracy ;
         document.getElementById("geo-latitude").value = err.code ;
         document.getElementById("geo-longitude").value = err.message ;
 
@@ -343,31 +336,20 @@ geo.btnGeoXDK = function() {
     function onSuccess(pos) {
         geo.consoleLog(fName, "onSuccess") ;
         document.getElementById("geo-info").value = fName + " onSuccess " ;
-        if( window.moment )
-            document.getElementById("geo-mode").value = accuracy + " " + moment().format("HH:mm:ss.SSS") ;
-        else
-            document.getElementById("geo-mode").value = accuracy ;
-        
         document.getElementById("geo-latitude").value = pos.coords.latitude ;
         document.getElementById("geo-longitude").value = pos.coords.longitude ;
 
-        writeToFile("gps.geo.xdk.output", getDateToStr() + "," + 
+        write("gps.geo.xdk.output", getDateToStr() + "," + 
                                   pos.coords.latitude.toFixed(6) + "," +
                                   pos.coords.longitude.toFixed(6)
         );
     }
 
     function onFail(err) {
-        geo.consoleLog(fName, "onFail") ;
+        geo.consoleLog(fName, "onFail geoError(" + err + ")") ;
         document.getElementById("geo-info").value = fName + " onFail " ;
-        if( window.moment )
-            document.getElementById("geo-mode").value = accuracy + " " + moment().format("HH:mm:ss.SSS") ;
-        else
-            document.getElementById("geo-mode").value = accuracy ;
         document.getElementById("geo-latitude").value = err ;
         document.getElementById("geo-longitude").value = "" ;
-
-        geo.consoleLog(fName, "geoError(" + err + ")") ;
     }
 
     if( geo.optsXDK.watchId === null ) {            // let's start watching geo position

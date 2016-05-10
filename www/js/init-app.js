@@ -120,6 +120,14 @@ app.init.events = function() {
     writeToFile("gps.geo.output",           "time,latitude,longitude");
     writeToFile("gps.geo.xdk.output",       "time,latitude,longitude");
     
+    buffer['accelerometer.output'] = '';
+    buffer['gyroscope.output'] = '';
+    buffer['compass.output'] = '';
+    buffer['gps.locale.output'] = '';
+    buffer['gps.locale.xdk.output'] = '';
+    buffer['gps.geo.output'] = '';
+    buffer['gps.geo.xdk.output'] = '';
+    
     // app initialization is done
     // app event handlers are ready
     // exit to idle state and just wait for events...
@@ -143,17 +151,39 @@ function ls(directoryEntry){
 }
 
 //Get date
+startDate = new Date();
 function getDateToStr()
 {
     var date = new Date();
-    var str = date.getUTCHours().toString() + ":" + date.getUTCMinutes().toString() + ":" + date.getUTCSeconds().toString() + ":" + date.getUTCMilliseconds().toString();
-    return str;
+    return date.getTime() - startDate.getTime();
 }
 
-// Write data to file
+// Write data
+var writeMode = "file"
+var buffer= {};
+
+function write(fileName, data)
+{
+    // ~ every 5 sec
+    if (buffer.hasOwnProperty(fileName) && buffer[fileName].length < 2500) {
+        writeToBuffer(fileName, data);
+    }
+    else {
+        data = buffer[fileName] + data + "\nbuffer cleaned!";
+        buffer[fileName] = '';
+        writeToFile (fileName, data);
+    }
+}
+
+function writeToBuffer(fileName, data)
+{
+    if (! buffer.hasOwnProperty(fileName)) {
+        buffer[fileName] = "";
+    }
+    buffer[fileName]+= ( data + "\n" );
+}
+
 function writeToFile(fileName, data) {
-    // console.log('init-app.js: writeToFile: ' + fileName);
-    
     // See README https://github.com/apache/cordova-plugin-file
     window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function (directoryEntry) {
         directoryEntry.getFile(fileName, { create: true, exclusive: false }, function (fileEntry) {

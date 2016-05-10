@@ -65,11 +65,9 @@ acc.btnAccel = function() {
 
         var newAccelMatrix =  math.round(math.multiply(app.rotateMatrix, accelMatrix), 2);   
         
-        document.getElementById('acceleration-x').value = math.subset(newAccelMatrix, math.index(0));
-        document.getElementById('acceleration-y').value = math.subset(newAccelMatrix, math.index(1));
-        document.getElementById('acceleration-z').value = math.subset(newAccelMatrix, math.index(2));
+        document.getElementById('acceleration').value = newAccelMatrix.toString(2);
         
-        writeToFile("accelerometer.output", getDateToStr() + "," +
+        write("accelerometer.output", getDateToStr() + "," +
                                             math.subset(newAccelMatrix, math.index(0)) + "," +
                                             math.subset(newAccelMatrix, math.index(1)) + "," +
                                             math.subset(newAccelMatrix, math.index(2)));
@@ -131,15 +129,14 @@ acc.btnCompass = function() {
     acc.consoleLog(fName, "entry") ;
 
     function onSuccess(heading) {
-        document.getElementById('compass-dir').value = heading.magneticHeading.toFixed(6) ;
-        writeToFile("compas.output", getDateToStr() + "," + heading.magneticHeading.toFixed(6))
+        var value = heading.magneticHeading.toFixed(6);
+        document.getElementById('compass-dir').value = value ;
+        write("compass.output", getDateToStr() + "," + value);
     }
-    
 
     function onFail(compassError) {
         acc.consoleLog(fName, "Compass error: " + compassError.code) ;
     }
-
 
     if( acc.watchIdCompass === null ) {
         try {                               // watch and update compass value every 25 msecs

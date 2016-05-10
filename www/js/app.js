@@ -64,9 +64,11 @@ app.btnVibrate = function() {
 app.rotateMatrixX = {};
 app.rotateMatrixY = {};
 app.rotateMatrixZ = {};
-app.rotateMatrix = {};
+app.rotateMatrix  = math.matrix([ [1,  0,  0],
+                                  [0,  1,  0], 
+                                  [0,  0,  1] ]);
 
-app.Fix = "no";
+app.Fix = "yes";
 app.btnFix = function() {
     "use strict" ;
     var fName = "app.btnFix():" ;
@@ -75,7 +77,7 @@ app.btnFix = function() {
     app.consoleLog(fName, "exit") ;
 } ;
 
-app.getGyro = "yes"; //TODO: this is a temporary solution and should be replaced
+app.getGyro = "no";
 app.btnGyro = function(){
 "use strict" ;
     var fName = "app.btnGyro():" ;
@@ -86,9 +88,7 @@ app.btnGyro = function(){
         var _beta  = Math.round(gyro.beta);
         var _gamma = Math.round(gyro.gamma);
         
-        document.getElementById('gyro-alpha').value = _alpha;
-        document.getElementById('gyro-beta').value  = _beta;
-        document.getElementById('gyro-gamma').value = _gamma;
+        document.getElementById('gyro').value = _alpha + ", " + _beta + ", " + _gamma;
         
         if (app.Fix == "yes") 
         {
@@ -117,30 +117,24 @@ app.btnGyro = function(){
                                                 [0,         0,          1] ]); // Matrix
             
             app.rotateMatrix = math.multiply(app.rotateMatrixZ, math.multiply(app.rotateMatrixX, app.rotateMatrixY));  
-            app.consoleLog(fName, "matrixX: " + app.rotateMatrixX.toString()) ;
-            app.consoleLog(fName, "matrixY: " + app.rotateMatrixY.toString()) ;
-            app.consoleLog(fName, "matrixZ: " + app.rotateMatrixZ.toString()) ;
-            app.consoleLog(fName, "matrix: "  + app.rotateMatrix.toString()) ;
-        }
-        
-        var str = 
-        writeToFile("gyroscope.output", getDateToStr() + "," +
+            var str = write("gyroscope.output", getDateToStr() + "," +
                                         _alpha + "," +
                                         _beta + "," +
                                         _gamma);
+        }
     }
 
-    if( acc.getGyro == "no" ) {
-        acc.getGyro = "yes";
+    if( app.getGyro == "no" ) {
+        app.getGyro = "yes";
         window.addEventListener("deviceorientation", onSuccess, false);
         addClass("cl_btnOn", document.getElementById("id_btnGyro")) ;
-        acc.consoleLog(fName, "btnGyro enabled.") ;
+        app.consoleLog(fName, "btnGyro enabled.") ;
     }
     else {
-        acc.getGyro = "no";
+        app.getGyro = "no";
         window.removeEventListener("deviceorientation", onSuccess, false);
         removeClass("cl_btnOn", document.getElementById("id_btnGyro")) ;
-        acc.consoleLog(fName, "btnGyro disabled.") ;
+        app.consoleLog(fName, "btnGyro disabled.") ;
     }
 
     acc.consoleLog(fName, "exit") ;
