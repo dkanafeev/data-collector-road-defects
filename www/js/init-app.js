@@ -112,13 +112,13 @@ app.init.events = function() {
     app.init.hideSplashScreen() ;   // after init is good time to remove splash screen; using a splash screen is optional
 
     // set header for files
-    writeToFile("accelerometer.output",     "time,accx,accy,accz");
-    writeToFile("gyroscope.output",         "time,alpha,beta,gamma");
-    writeToFile("compass.output",           "time,magneticHeading");
-    writeToFile("gps.locale.output",        "time,latitude,longitude");
-    writeToFile("gps.locale.xdk.output",    "time,latitude,longitude");
-    writeToFile("gps.geo.output",           "time,latitude,longitude");
-    writeToFile("gps.geo.xdk.output",       "time,latitude,longitude");
+    writeToFile("accelerometer.output",     "time,accx,accy,accz"     + "\n" + startDate.toString());
+    writeToFile("gyroscope.output",         "time,alpha,beta,gamma"   + "\n" + startDate.toString());
+    writeToFile("compass.output",           "time,magneticHeading"    + "\n" + startDate.toString());
+    writeToFile("gps.locale.output",        "time,latitude,longitude" + "\n" + startDate.toString());
+    writeToFile("gps.locale.xdk.output",    "time,latitude,longitude" + "\n" + startDate.toString());
+    writeToFile("gps.geo.output",           "time,latitude,longitude" + "\n" + startDate.toString());
+    writeToFile("gps.geo.xdk.output",       "time,latitude,longitude" + "\n" + startDate.toString());
     
     buffer['accelerometer.output'] = '';
     buffer['gyroscope.output'] = '';
