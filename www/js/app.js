@@ -61,12 +61,22 @@ app.btnVibrate = function() {
     app.consoleLog(fName, "exit") ;
 } ;
 
+app.time = 0
+
+app.alpha_sum = 0
+app.beta_sum  = 0
+app.gamma_sum = 0
+
 app.rotateMatrixX = {};
 app.rotateMatrixY = {};
 app.rotateMatrixZ = {};
 app.rotateMatrix  = math.matrix([ [1,  0,  0],
                                   [0,  1,  0], 
                                   [0,  0,  1] ]);
+
+app.newRotateMatrix = math.matrix([ [1,  0,  0],
+                                    [0,  1,  0], 
+                                    [0,  0,  1] ]);
 
 app.Fix = "yes";
 app.btnFix = function() {
@@ -89,39 +99,59 @@ app.btnGyro = function(){
         var _gamma = Math.round(gyro.gamma);
         
         document.getElementById('gyro').value = _alpha + ", " + _beta + ", " + _gamma;
+        if (app.Fix == "yes") 
+        {   
+            app.alpha_sum = _alpha
+            app.beta_sum  = _beta
+            app.gamma_sum = _gamma
+        }
+        else 
+        {
+            var coefa = 45.0 / (360.0 + Math.pow(app.alpha_sum - _alpha, 2));
+            var coefb = 45.0 / (360.0 + Math.pow(app.beta_sum  - _beta,  2));
+            var coefg = 45.0 / (360.0 + Math.pow(app.gamma_sum - _gamma, 2));
+            app.alpha_sum = (1 - coefa)*app.alpha_sum + coefa*_alpha
+            app.beta_sum  = (1 - coefb)*app.beta_sum  + coefb*_beta
+            app.gamma_sum = (1 - coefg)*app.gamma_sum + coefg*_gamma
+        }
+        document.getElementById('new-gyro').value = Math.round(app.alpha_sum) + ", "
+                                                  + Math.round(app.beta_sum)  + ", " 
+                                                  + Math.round(app.gamma_sum);
+        
+        var sinAlpha = math.round(math.sin(math.unit(app.alpha_sum, 'deg')), 2);
+        var cosAlpha = math.round(math.cos(math.unit(app.alpha_sum, 'deg')), 2);
+        
+        var sinBeta = math.round(math.sin(math.unit(app.beta_sum, 'deg')), 2);
+        var cosBeta = math.round(math.cos(math.unit(app.beta_sum, 'deg')), 2);
+        
+        var sinGamma = math.round(math.sin(math.unit(app.gamma_sum, 'deg')), 2);
+        var cosGamma = math.round(math.cos(math.unit(app.gamma_sum, 'deg')), 2);
+        
+        // X is axis of rotation
+        app.rotateMatrixX   = math.matrix([ [1,        0,           0],
+                                            [0,        cosBeta,     -sinBeta], 
+                                            [0,        sinBeta,     cosBeta] ]);  
+        // Y is axis of rotation
+        app.rotateMatrixY   = math.matrix([ [cosGamma,  0,          sinGamma],
+                                            [0,         1,          0], 
+                                            [-sinGamma, 0,          cosGamma] ]);
+         // Z is axis of rotation 
+        app.rotateMatrixZ   = math.matrix([ [cosAlpha,  -sinAlpha,  0],
+                                            [sinAlpha,  cosAlpha,   0], 
+                                            [0,         0,          1] ]); // Matrix
+        
+        app.newRotateMatrix = math.multiply(app.rotateMatrixZ, math.multiply(app.rotateMatrixX, app.rotateMatrixY));  
         
         if (app.Fix == "yes") 
         {
             app.Fix = "no";
-            
-            var sinAlpha = math.round(math.sin(math.unit(_alpha, 'deg')), 2);
-            var cosAlpha = math.round(math.cos(math.unit(_alpha, 'deg')), 2);
-            
-            var sinBeta = math.round(math.sin(math.unit(_beta, 'deg')), 2);
-            var cosBeta = math.round(math.cos(math.unit(_beta, 'deg')), 2);
-            
-            var sinGamma = math.round(math.sin(math.unit(_gamma, 'deg')), 2);
-            var cosGamma = math.round(math.cos(math.unit(_gamma, 'deg')), 2);
-            
-            // X is axis of rotation
-            app.rotateMatrixX   = math.matrix([ [1,        0,           0],
-                                                [0,        cosBeta,     -sinBeta], 
-                                                [0,        sinBeta,     cosBeta] ]);  
-            // Y is axis of rotation
-            app.rotateMatrixY   = math.matrix([ [cosGamma,  0,          sinGamma],
-                                                [0,         1,          0], 
-                                                [-sinGamma, 0,          cosGamma] ]);
-             // Z is axis of rotation 
-            app.rotateMatrixZ   = math.matrix([ [cosAlpha,  -sinAlpha,  0],
-                                                [sinAlpha,  cosAlpha,   0], 
-                                                [0,         0,          1] ]); // Matrix
-            
-            app.rotateMatrix = math.multiply(app.rotateMatrixZ, math.multiply(app.rotateMatrixX, app.rotateMatrixY));  
-            var str = write("gyroscope.output", getDateToStr() + "," +
-                                        _alpha + "," +
-                                        _beta + "," +
-                                        _gamma);
+            app.rotateMatrix = app.newRotateMatrix
         }
+        
+        var str = write("gyroscope.output", getDateToStr() + "," +
+                                                    _alpha + "," +
+                                                     _beta + "," +
+                                                    _gamma);
     }
 
     if( app.getGyro == "no" ) {

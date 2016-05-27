@@ -64,13 +64,19 @@ acc.btnAccel = function() {
                                            acceleration.z ]);            
 
         var newAccelMatrix =  math.round(math.multiply(app.rotateMatrix, accelMatrix), 2);   
-        
-        document.getElementById('acceleration').value = newAccelMatrix.toString(2);
-        
-        write("accelerometer.output", getDateToStr() + "," +
+        app.time = getDateToStr();
+        write("accelerometer.output", app.time + "," +
                                             math.subset(newAccelMatrix, math.index(0)) + "," +
                                             math.subset(newAccelMatrix, math.index(1)) + "," +
                                             math.subset(newAccelMatrix, math.index(2)));
+        
+        var updAccelMatrix =  math.round(math.multiply(app.newRotateMatrix, accelMatrix), 2);   
+        write("new_accelerometer.output", app.time + "," +
+                                            math.subset(updAccelMatrix, math.index(0)) + "," +
+                                            math.subset(updAccelMatrix, math.index(1)) + "," +
+                                            math.subset(updAccelMatrix, math.index(2)));
+        
+        document.getElementById('acceleration').value = newAccelMatrix.toString(2);
     }
 
     function onFail() {
@@ -131,7 +137,7 @@ acc.btnCompass = function() {
     function onSuccess(heading) {
         var value = heading.magneticHeading.toFixed(6);
         document.getElementById('compass-dir').value = value ;
-        write("compass.output", getDateToStr() + "," + value);
+        write("compass.output", getDateToStr() + "," + value + "," + app.time);
     }
 
     function onFail(compassError) {

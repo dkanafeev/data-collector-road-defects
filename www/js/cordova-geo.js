@@ -279,9 +279,9 @@ geo.btnGeo = function() {
         document.getElementById("geo-latitude").value = pos.coords.latitude ;
         document.getElementById("geo-longitude").value = pos.coords.longitude ;
         
-        write("gps.geo.output", getDateToStr() + "," + 
+        writeToFile("gps.geo.output", getDateToStr() + "," + 
                                   pos.coords.latitude.toFixed(6) + "," +
-                                  pos.coords.longitude.toFixed(6)
+                                  pos.coords.longitude.toFixed(6) + "," + app.time
         );
     }
 
